@@ -1,4 +1,5 @@
 "use client";
+import { useSession, signOut } from "next-auth/react";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -22,6 +23,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import SearchBar from "./Search";
+import { useRouter } from "next/navigation";
+
 
 /**
  * Desktop dropdown approach:
@@ -45,8 +48,13 @@ const Nav: React.FC = () => {
   const shopRef = useRef<HTMLDivElement | null>(null);
   const orderRef = useRef<HTMLDivElement | null>(null);
 
+const { data: session } = useSession();
+const [accountOpen, setAccountOpen] = useState(false);
+const accountRef = useRef<HTMLDivElement | null>(null);
+const router = useRouter();
   useEffect(() => {
     setMounted(true);
+    
 
     const onScroll = () => {
       const current = window.scrollY;
@@ -239,9 +247,65 @@ const Nav: React.FC = () => {
             </Link>
           </div>
 
-          <Link href="/account">
-            <FiUser size={22} className="cursor-pointer" />
-          </Link>
+         <div ref={accountRef} className="relative">
+  {!session ? (
+    // ❌ NOT LOGGED IN → direct link
+    <Link href="/account">
+      <FiUser size={22} className="cursor-pointer" />
+    </Link>
+  ) : (
+    // ✅ LOGGED IN → dropdown
+    <>
+      <button
+        onClick={() => setAccountOpen((p) => !p)}
+        className="cursor-pointer"
+        aria-haspopup="true"
+        aria-expanded={accountOpen}
+      >
+        <FiUser size={22} />
+      </button>
+
+      <div
+        className={`absolute right-0 top-full mt-2 w-48 bg-white dark:bg-black rounded-lg shadow-lg ring-1 ring-black/5 z-50 transition ${
+          accountOpen
+            ? "opacity-100 scale-100"
+            : "opacity-0 pointer-events-none scale-95"
+        }`}
+      >
+     <div
+  onClick={() => {
+    if (session.user?.role === "admin") {
+      router.push("/admin/dashboard");
+      setAccountOpen(false);
+    }
+  }}
+  className={`p-4 border-b text-sm font-medium flex items-center gap-2
+    ${
+      session.user?.role === "admin"
+        ? "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+        : ""
+    }`}
+>
+  👋 {session.user?.name}
+  {session.user?.role === "admin" && (
+    <span className="text-xs text-blue-600">(Admin)</span>
+  )}
+</div>
+
+        <button
+         onClick={async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+  }}
+          className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+        >
+          Logout
+        </button>
+      </div>
+    </>
+  )}
+</div>
+
         </div>
 
         {/* MOBILE MENU */}
@@ -277,11 +341,68 @@ const Nav: React.FC = () => {
               </span>
             </Link>
           </div>
+          <div ref={accountRef} className="relative mx-2">
+  {!session ? (
+    // ❌ NOT LOGGED IN → direct link
+    <Link href="/account">
+      <FiUser size={22} className="cursor-pointer" />
+    </Link>
+  ) : (
+    // ✅ LOGGED IN → dropdown
+    <>
+      <button
+        onClick={() => setAccountOpen((p) => !p)}
+        className="cursor-pointer"
+        aria-haspopup="true"
+        aria-expanded={accountOpen}
+      >
+        <FiUser size={22} />
+      </button>
+
+      <div
+        className={`absolute right-0 top-full mt-2 w-48 bg-white dark:bg-black rounded-lg shadow-lg ring-1 ring-black/5 z-50 transition ${
+          accountOpen
+            ? "opacity-100 scale-100"
+            : "opacity-0 pointer-events-none scale-95"
+        }`}
+      >
+       <div
+  onClick={() => {
+    if (session.user?.role === "admin") {
+      router.push("/admin/dashboard");
+      setAccountOpen(false);
+    }
+  }}
+  className={`p-4 border-b text-sm font-medium flex items-center gap-2
+    ${
+      session.user?.role === "admin"
+        ? "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+        : ""
+    }`}
+>
+  👋 {session.user?.name}
+  {session.user?.role === "admin" && (
+    <span className="text-xs text-blue-600">(Admin)</span>
+  )}
+</div>
+
+  <button
+  onClick={async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+  }}
+>
+  Logout
+</button>
+      </div>
+    </>
+  )}
+</div>
 
           {/* Mobile Sheet Menu */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <button className="p-2 ml-2">
+              <button className="p-2 ">
                 <FiMenu size={26} />
               </button>
             </SheetTrigger>
