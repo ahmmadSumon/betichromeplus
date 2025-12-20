@@ -1,7 +1,23 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { ThreeDCardDemo } from "./ThreeDCardDemo";
 
+interface Collection {
+  _id: string;
+  name: string;
+  image: string;
+}
+
 const ThreeSection = () => {
+  const [collections, setCollections] = useState<Collection[]>([]);
+
+  useEffect(() => {
+    fetch("/api/collections")
+      .then((res) => res.json())
+      .then((data) => setCollections(data));
+  }, []);
+
   return (
     <section className="bg-white w-full py-10">
       <div
@@ -13,9 +29,13 @@ const ThreeSection = () => {
           px-3 sm:px-6
         "
       >
-        <ThreeDCardDemo image="/image/slide1.jpg" name="Premium Jacket" />
-        <ThreeDCardDemo image="/image/slide2.jpg" name="Urban Sneakers" />
-        <ThreeDCardDemo image="/image/slide3.jpg" name="Classic Watch" />
+        {collections.map((item) => (
+          <ThreeDCardDemo
+            key={item._id}
+            image={item.image}
+            name={item.name}
+          />
+        ))}
       </div>
     </section>
   );

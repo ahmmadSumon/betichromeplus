@@ -57,15 +57,16 @@ export default function Page() {
           <div className="relative z-0">
   <HeroSection />
 </div>
-
 <div className="relative z-10">
-  <TwoSection />
+  <ThreeSection/>
 </div>
+
 <div className="relative z-10">
   <Latest />
 </div>
+
 <div className="relative z-10">
-  <ThreeSection/>
+  <TwoSection />
 </div>
 <div className="relative z-10">
  <JustIn />
