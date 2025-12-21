@@ -74,53 +74,50 @@ export const ProductTable: React.FC<ProductTableProps> = ({
           </div>
 
           {/* Product Info */}
-          <div className="p-3 flex flex-col gap-1 flex-1">
-            <h3 className="font-semibold text-gray-800 truncate">
-              {p.title}
-            </h3>
-            <p className="text-sm text-gray-500 truncate">
-              {p.category}
-            </p>
+{/* Product Info */}
+<div className="p-3 flex flex-col gap-1 flex-1">
+  <h3 className="font-semibold text-gray-800 truncate">{p.title}</h3>
 
-            {/* Collections */}
-            <div className="flex flex-wrap gap-1 mt-1">
-              {p.collections?.map((c: string, i: number) => (
-                <span
-                  key={i}
-                  className="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full text-xs"
-                >
-                  {c}
-                </span>
-              ))}
-            </div>
+  <p className="text-sm text-gray-500 truncate">
+    {typeof p.category === "string" ? p.category : p.category?.name}
+  </p>
 
-            {/* Price & Quantity */}
-            <div className="flex justify-between items-center mt-2">
-              <span className="font-medium text-gray-700">
-                ${p.price}
-              </span>
-              <span className="text-sm text-gray-500">
-                {p.quantity} pcs
-              </span>
-            </div>
+  {/* Collections */}
+  <div className="flex flex-wrap gap-1 mt-1">
+    {p.collections?.map((c: any, i: number) => (
+      <span
+        key={c._id || i}
+        className="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full text-xs"
+      >
+        {typeof c === "string" ? c : c.name}
+      </span>
+    ))}
+  </div>
 
-            {/* Actions */}
-            <div className="flex gap-2 mt-3">
-              <button
-                onClick={() => onEdit?.(p)}
-                className="flex-1 bg-yellow-400 text-white text-sm py-1 rounded hover:bg-yellow-500"
-              >
-                Edit
-              </button>
+  {/* Price & Quantity */}
+  <div className="flex justify-between items-center mt-2">
+    <span className="font-medium text-gray-700">${p.price}</span>
+    <span className="text-sm text-gray-500">{p.quantity} pcs</span>
+  </div>
 
-              <button
-                onClick={() => handleDelete(p._id)}
-                className="flex-1 bg-red-500 text-white text-sm py-1 rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
+  {/* Actions */}
+  <div className="flex gap-2 mt-3">
+    <button
+      onClick={() => onEdit?.(p)}
+      className="flex-1 bg-yellow-400 text-white text-sm py-1 rounded hover:bg-yellow-500"
+    >
+      Edit
+    </button>
+
+    <button
+      onClick={() => handleDelete(p._id)}
+      className="flex-1 bg-red-500 text-white text-sm py-1 rounded hover:bg-red-600"
+    >
+      Delete
+    </button>
+  </div>
+</div>
+
         </div>
       ))}
     </div>

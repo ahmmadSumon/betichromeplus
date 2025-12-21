@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import {
   IconDashboard,
@@ -15,9 +17,17 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  const { isMobile, setOpenMobile } = useSidebar()
+
+  // Helper to handle link click
+  const handleLinkClick = () => {
+    if (isMobile) setOpenMobile(false)
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       {/* LOGO */}
@@ -25,7 +35,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/admin/dashboard">
+              <Link href="/admin/dashboard" onClick={handleLinkClick}>
                 <IconDashboard />
                 <span className="font-semibold">Betichrome Admin</span>
               </Link>
@@ -39,7 +49,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/admin/dashboard">
+              <Link href="/admin/dashboard" onClick={handleLinkClick}>
                 <IconDashboard />
                 Dashboard
               </Link>
@@ -48,7 +58,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
 
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/admin/products">
+              <Link href="/admin/products" onClick={handleLinkClick}>
                 <IconPackage />
                 Products
               </Link>
@@ -57,7 +67,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
 
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/admin/orders">
+              <Link href="/admin/orders" onClick={handleLinkClick}>
                 <IconShoppingCart />
                 Orders
               </Link>
@@ -66,8 +76,8 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
 
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/admin/collections">
-                 <IconPackage />
+              <Link href="/admin/collections" onClick={handleLinkClick}>
+                <IconPackage />
                 Collections
               </Link>
             </SidebarMenuButton>
@@ -75,7 +85,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
 
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/admin/settings">
+              <Link href="/admin/settings" onClick={handleLinkClick}>
                 <IconSettings />
                 Settings
               </Link>

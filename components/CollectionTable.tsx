@@ -68,7 +68,7 @@ export function CollectionTable() {
               <tr>
                 <th className="p-3">Image</th>
                 <th className="p-3">Name</th>
-                <th className="p-3">Products</th> {/* ✅ NEW */}
+                <th className="p-3">Products</th> 
                 <th className="p-3 text-right">Actions</th>
               </tr>
             </thead>
