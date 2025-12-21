@@ -96,7 +96,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
 
   {/* Price & Quantity */}
   <div className="flex justify-between items-center mt-2">
-    <span className="font-medium text-gray-700">${p.price}</span>
+    <span className="font-medium text-gray-700">TK{p.price}</span>
     <span className="text-sm text-gray-500">{p.quantity} pcs</span>
   </div>
 

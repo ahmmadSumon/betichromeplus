@@ -29,62 +29,65 @@ export function ThreeDCardDemo({ image, name }: ProductCardProps) {
             alt={name}
             className="
               w-full h-full object-cover
+              md:group-hover/card:scale-110
               transition-transform duration-500
-              group-hover/card:scale-110
             "
           />
         </CardItem>
 
-        {/* DARK OVERLAY (hover only) */}
+        {/* DARK OVERLAY (DESKTOP ONLY) */}
         <div
-          className="
-            absolute inset-0
-            bg-black/30
-            opacity-0
-            group-hover/card:opacity-100
-            transition-opacity duration-300
-            z-10
-          "
-        />
+  className="
+    absolute inset-0
+    bg-black/20
+    md:bg-black/0
+    md:group-hover/card:bg-black/30
+    transition-colors duration-300
+    z-10
+  "
+/>
 
         {/* ALWAYS VISIBLE NAME */}
-        <div className="absolute bottom-20 left-5  text-center z-20">
+        <div className="absolute bottom-20 left-5 z-20">
           <h3 className="text-white text-lg md:text-3xl uppercase font-bold">
             {name}
           </h3>
         </div>
 
-        {/* HOVER CONTENT */}
+        {/* HOVER CONTENT — DESKTOP ONLY */}
         <CardItem
-          translateZ="140"
-          className="
-            absolute inset-0
-            flex flex-col items-center justify-center
-            text-center z-30
-            opacity-0
-            translate-y-4
-            group-hover/card:opacity-100
-            group-hover/card:translate-y-0
-            transition-all duration-300
-          "
-        >
-          <p className="text-white text-sm mb-3 tracking-wide uppercase">
-            Check what’s new
-          </p>
+  translateZ="140"
+  className="
+    absolute inset-0
+    flex md:flex
+    flex-col items-center justify-center
+    text-center z-30
 
-          <button
-            className="
-              px-6 py-2
-              rounded-full
-              bg-white text-black
-              text-sm font-semibold
-              hover:bg-gray-200
-              transition
-            "
-          >
-            Click Here
-          </button>
-        </CardItem>
+    opacity-100 md:opacity-0
+    translate-y-0 md:translate-y-4
+
+    md:group-hover/card:opacity-100
+    md:group-hover/card:translate-y-0
+
+    transition-all duration-300
+  "
+>
+  <p className="text-white text-sm mb-3 tracking-wide uppercase">
+    Check what’s new
+  </p>
+
+  <button
+    className="
+      px-6 py-2
+      rounded-full
+      bg-white text-black
+      text-sm font-semibold
+    "
+  >
+    Click Here
+  </button>
+</CardItem>
+
       </CardBody>
     </CardContainer>
   );

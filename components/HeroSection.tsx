@@ -58,95 +58,87 @@ export default function HeroSection() {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: panel,
-            start: "top 75%",
+            start: "top 70%",
+            toggleActions: "play none none reverse",
           },
         });
 
-        // Title animation
+        // 🌟 Title animation (smooth & premium)
         tl.fromTo(
           titleWords,
           {
             opacity: 0,
-            y: 60,
-            rotateX: 90,
-            transformPerspective: 800,
-            transformOrigin: "top center",
+            y: 50,
           },
           {
             opacity: 1,
             y: 0,
-            rotateX: 0,
-            duration: 1.2,
-            ease: "power3.out",
-            stagger: 0.08,
+            duration: 1,
+            ease: "power4.out",
+            stagger: 0.06,
           }
         );
 
-        // Subtitle animation
+        // 🌟 Subtitle animation
         tl.fromTo(
           subtitleWords,
           {
             opacity: 0,
-            y: 20,
-            rotateX: -45,
-            transformPerspective: 600,
-            transformOrigin: "bottom center",
+            y: 25,
           },
           {
             opacity: 1,
             y: 0,
-            rotateX: 0,
-            duration: 1,
-            ease: "power2.out",
-            stagger: 0.04,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.03,
           },
-          "-=0.8"
+          "-=0.6"
         );
 
-        // Button animation
+        // 🌟 Button animation (friendly bounce)
         tl.fromTo(
           button,
           {
             opacity: 0,
-            y: 40,
-            scale: 0.9,
-            rotateX: -10,
+            y: 30,
+            scale: 0.95,
           },
           {
             opacity: 1,
             y: 0,
             scale: 1,
-            rotateX: 0,
-            duration: 0.7,
-            ease: "back.out(1.7)",
+            duration: 0.6,
+            ease: "back.out(1.4)",
           },
           "-=0.4"
         );
 
-        // Background parallax
+        // 🌟 Background parallax (very smooth)
         gsap.fromTo(
           bg,
-          { scale: 1.1, y: -40 },
+          { scale: 1.15, y: -60 },
           {
             scale: 1,
             y: 0,
+            ease: "none",
             scrollTrigger: {
               trigger: panel,
-              scrub: 1.1,
               start: "top bottom",
               end: "bottom top",
+              scrub: 0.6,
             },
           }
         );
 
-        // Pin panel
+        // 🌟 Softer pin (no jump feeling)
         ScrollTrigger.create({
           trigger: panel,
           start: "top top",
-          end: "bottom top",
+          end: "+=100%",
           pin: true,
           pinSpacing: false,
-          scrub: true,
+          anticipatePin: 1,
         });
       });
     }, containerRef);
@@ -168,68 +160,60 @@ export default function HeroSection() {
           />
           <div className="absolute inset-0 bg-black/40" />
 
-          {/* Follow Us and Scroll Indicator */}
+          {/* Footer UI */}
           <div className="absolute bottom-10 left-0 right-0 flex justify-between items-center px-6 max-w-[1600px] mx-auto text-white z-20">
-            {/* Follow Us on the left */}
-            <div className="flex  items-start gap-6 text-3xl">
-              <span className="text-sm md:text-base font-bold">Follow Us</span>
-              <div className="flex gap-6 text-2xl">
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-semibold">Follow Us</span>
+              <div className="flex gap-4 text-xl">
                 <Link href="https://facebook.com" target="_blank">
-                  <FaFacebook className="hover:scale-125 transition-transform duration-300" />
+                  <FaFacebook className="hover:scale-125 transition" />
                 </Link>
                 <Link href="https://wa.me/8801700000000" target="_blank">
-                  <FaWhatsapp className="hover:scale-125 transition-transform duration-300" />
+                  <FaWhatsapp className="hover:scale-125 transition" />
                 </Link>
                 <Link href="https://instagram.com" target="_blank">
-                  <FaInstagram className="hover:scale-125 transition-transform duration-300" />
+                  <FaInstagram className="hover:scale-125 transition" />
                 </Link>
               </div>
             </div>
 
-            {/* Scroll indicator on the right */}
-            <div className="flex flex-col items-center gap-2 text-white text-2xl">
-              <span className="text-sm md:text-base font-bold rotate-90 tracking-wider">
-                Scroll
-              </span>
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-sm rotate-90 tracking-wider">Scroll</span>
               <svg
                 className="w-6 h-6 animate-bounce"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2}
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
           </div>
 
-          <div className="content relative z-10 text-center text-white px-6">
-            <h1 className="title text-5xl md:text-6xl font-extrabold mb-6">
+          <div className="relative z-10 text-center text-white px-6 max-w-4xl">
+            <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
               {section.title.split(" ").map((word, idx) => (
-                <span
-                  key={idx}
-                  className="word inline-block opacity-0 will-change-transform mr-2"
-                >
+                <span key={idx} className="word inline-block mr-2 opacity-0">
                   {word}
                 </span>
               ))}
             </h1>
 
-            <p className="subtitle text-lg md:text-2xl mb-8">
+            <p className="text-lg md:text-2xl mb-8">
               {section.subtitle.split(" ").map((word, idx) => (
-                <span
-                  key={idx}
-                  className="subword inline-block opacity-0 will-change-transform mr-1"
-                >
+                <span key={idx} className="subword inline-block mr-1 opacity-0">
                   {word}
                 </span>
               ))}
             </p>
 
-            <button className="px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition">
-              {section.button}
-            </button>
+          <Link href="/all-products">
+  <button className="px-10 py-4 rounded-full bg-white text-black font-semibold hover:scale-105 hover:bg-gray-200 transition">
+    {section.button}
+  </button>
+</Link>
+
           </div>
         </div>
       ))}

@@ -76,7 +76,7 @@ export function ProductCarousel() {
                     <div className="p-4 text-center">
                       <h3 className="text-lg font-semibold">{product.title}</h3>
                       {product.price && (
-                        <p className="text-sm text-gray-500">${product.price}</p>
+                        <p className="text-sm text-gray-500">TK {product.price}</p>
                       )}
                     </div>
                   </CardContent>
