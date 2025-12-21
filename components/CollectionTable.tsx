@@ -7,6 +7,7 @@ interface Collection {
   _id: string;
   name: string;
   image: string;
+  productCount: number; // ✅ ADD THIS
 }
 
 export function CollectionTable() {
@@ -28,15 +29,26 @@ export function CollectionTable() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this collection?")) return;
 
-    await fetch(`/api/collections/${id}`, {
+    const res = await fetch(`/api/collections/${id}`, {
       method: "DELETE",
     });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+      return;
+    }
 
     fetchCollections();
   };
 
   if (loading) {
-    return <p className="text-sm text-muted-foreground">Loading collections...</p>;
+    return (
+      <p className="text-sm text-muted-foreground">
+        Loading collections...
+      </p>
+    );
   }
 
   return (
@@ -56,6 +68,7 @@ export function CollectionTable() {
               <tr>
                 <th className="p-3">Image</th>
                 <th className="p-3">Name</th>
+                <th className="p-3">Products</th> {/* ✅ NEW */}
                 <th className="p-3 text-right">Actions</th>
               </tr>
             </thead>
@@ -78,6 +91,13 @@ export function CollectionTable() {
                   </td>
 
                   <td className="p-3 font-medium">{item.name}</td>
+
+                  {/* ✅ PRODUCT COUNT */}
+                  <td className="p-3">
+                    <span className="inline-flex items-center justify-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+                      {item.productCount}
+                    </span>
+                  </td>
 
                   <td className="p-3 text-right">
                     <button
