@@ -7,7 +7,7 @@ import HeroSection from "@/components/HeroSection";
 import { ThreeDCardDemo } from "@/components/ThreeDCardDemo";
 import TwoSection from "@/components/TwoSection";
 import Latest from "@/components/Latest";
-import JustIn from "@/components/JustIn";
+import {JustIn} from "@/components/JustIn";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import Showcase from "@/components/Showcase";
 import ThreeSection from "@/components/ThreeSection";

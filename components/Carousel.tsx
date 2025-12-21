@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link"; // Import Link
+import Link from "next/link";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,24 +14,31 @@ interface Product {
 }
 
 export function ProductCarousel() {
-  const [emblaRef] = useEmblaCarousel(
+  const [emblaRef, embla] = useEmblaCarousel(
     { loop: true, align: "start", skipSnaps: false },
     [Autoplay({ delay: 4000, stopOnInteraction: false })]
   );
 
   const [products, setProducts] = React.useState<Product[]>([]);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
+    let mounted = true;
+
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch("/api/products", { cache: "no-store" });
         const data = await res.json();
-        setProducts(data.slice(-8).reverse());
+        if (mounted) setProducts((data || []).slice(-8).reverse());
       } catch (err) {
         console.error("Failed to fetch products:", err);
+      } finally {
+        if (mounted) setLoading(false);
       }
     };
+
     fetchProducts();
+    return () => { mounted = false; };
   }, []);
 
   const getSlideWidth = () => {
@@ -51,40 +58,57 @@ export function ProductCarousel() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  if (loading) {
+    return (
+      <div className="w-full max-w-7xl mx-auto py-6 text-center text-gray-500">
+        Loading products...
+      </div>
+    );
+  }
+
+  if (!products.length) {
+    return (
+      <div className="w-full max-w-7xl mx-auto py-6 text-center text-gray-500">
+        No products available.
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full max-w-7xl mx-auto py-6">
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-2">
-          {products.map((product) => (
-            <div key={product._id} className="flex-none" style={{ width: slideWidth }}>
-              {/* Wrap card with Link */}
-              <Link href={`/products/${product._id}`}>
-                <Card className="overflow-hidden rounded-xl cursor-pointer">
-                  <CardContent className="p-0">
-                    <div className="relative w-full h-60 md:h-72 group">
-                      <img
-                        src={product.images[0] || "/image/slide1.jpg"}
-                        alt={product.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span className="text-white text-lg font-bold">
-                          {product.title}
-                        </span>
-                      </div>
+    <div className="w-full max-w-7xl mx-auto py-6 overflow-hidden" ref={emblaRef}>
+      <div className="flex gap-2">
+        {products.map((product) => (
+          <div
+            key={product._id}
+            className="flex-none"
+            style={{ width: slideWidth }}
+          >
+            <Link href={`/products/${product._id}`}>
+              <Card className="overflow-hidden rounded-xl cursor-pointer">
+                <CardContent className="p-0">
+                  <div className="relative w-full h-60 md:h-72 group">
+                    <img
+                      src={product.images[0] || "/image/placeholder.jpg"}
+                      alt={product.title || "Product"}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="text-white text-lg font-bold">
+                        {product.title}
+                      </span>
                     </div>
-                    <div className="p-4 text-center">
-                      <h3 className="text-lg font-semibold">{product.title}</h3>
-                      {product.price && (
-                        <p className="text-sm text-gray-500">TK {product.price}</p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
-          ))}
-        </div>
+                  </div>
+                  <div className="p-4 text-center">
+                    <h3 className="text-lg font-semibold">{product.title}</h3>
+                    {product.price !== undefined && (
+                      <p className="text-sm text-gray-500">TK {product.price}</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        ))}
       </div>
     </div>
   );
