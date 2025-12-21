@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import Link from "next/link";
 
 const JustIn = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -43,6 +44,7 @@ const JustIn = () => {
                 key={product._id}
                 className="relative hover:shadow-lg transition-shadow duration-300"
               >
+                 <Link href={`/products/${product._id}`} className="block">
                 <CardContent className="p-0 relative">
                   <img
                     src={product.images?.[0] || "/image/placeholder.jpg"}
@@ -67,9 +69,9 @@ const JustIn = () => {
                     <p className="text-sm text-gray-600">${product.price}</p>
                   </div>
                 </CardContent>
-
+</Link>
                 <CardFooter className="p-2">
-                  <Button className="w-full">Add to Cart</Button>
+                  
                 </CardFooter>
               </Card>
             );
