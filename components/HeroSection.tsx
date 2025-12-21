@@ -63,58 +63,30 @@ export default function HeroSection() {
           },
         });
 
-        // 🌟 Title animation (smooth & premium)
+        // Title animation
         tl.fromTo(
           titleWords,
-          {
-            opacity: 0,
-            y: 50,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power4.out",
-            stagger: 0.06,
-          }
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 1, ease: "power4.out", stagger: 0.06 }
         );
 
-        // 🌟 Subtitle animation
+        // Subtitle animation
         tl.fromTo(
           subtitleWords,
-          {
-            opacity: 0,
-            y: 25,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            stagger: 0.03,
-          },
+          { opacity: 0, y: 25 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.03 },
           "-=0.6"
         );
 
-        // 🌟 Button animation (friendly bounce)
+        // Button animation
         tl.fromTo(
           button,
-          {
-            opacity: 0,
-            y: 30,
-            scale: 0.95,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            ease: "back.out(1.4)",
-          },
+          { opacity: 0, y: 30, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.4)" },
           "-=0.4"
         );
 
-        // 🌟 Background parallax (very smooth)
+        // Background parallax
         gsap.fromTo(
           bg,
           { scale: 1.15, y: -60 },
@@ -122,16 +94,11 @@ export default function HeroSection() {
             scale: 1,
             y: 0,
             ease: "none",
-            scrollTrigger: {
-              trigger: panel,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 0.6,
-            },
+            scrollTrigger: { trigger: panel, start: "top bottom", end: "bottom top", scrub: 0.6 },
           }
         );
 
-        // 🌟 Softer pin (no jump feeling)
+        // Pin panel
         ScrollTrigger.create({
           trigger: panel,
           start: "top top",
@@ -208,12 +175,12 @@ export default function HeroSection() {
               ))}
             </p>
 
-          <Link href="/all-products">
-  <button className="px-10 py-4 rounded-full bg-white text-black font-semibold hover:scale-105 hover:bg-gray-200 transition">
-    {section.button}
-  </button>
-</Link>
-
+            {/* Button linking to /all-products */}
+            <Link href="/all-products">
+              <button className="px-10 py-4 rounded-full bg-white text-black font-semibold hover:scale-105 hover:bg-gray-200 transition">
+                {section.button}
+              </button>
+            </Link>
           </div>
         </div>
       ))}
