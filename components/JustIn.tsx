@@ -50,7 +50,7 @@ export function JustIn() {
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-2xl font-bold mb-6">Just Arrived</h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {products.map((p) => (
             <Card key={p._id}>
               <Link href={`/products/${p._id}`}>

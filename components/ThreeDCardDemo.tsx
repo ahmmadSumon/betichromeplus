@@ -49,7 +49,7 @@ export function ThreeDCardDemo({ image, name }: ProductCardProps) {
 
         {/* ALWAYS VISIBLE NAME */}
         <div className="absolute bottom-20 left-5 z-20">
-          <h3 className="text-white text-lg md:text-3xl uppercase font-bold">
+          <h3 className="text-white text-3xl md:text-5xl uppercase font-bold">
             {name}
           </h3>
         </div>

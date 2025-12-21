@@ -8,7 +8,7 @@ export function EncryptedTextDemoSecond() {
         text="Welcome to the Matrix, Neo."
         encryptedClassName="text-neutral-500"
         revealedClassName="dark:text-white text-black"
-        revealDelayMs={50}
+        revealDelayMs={100}
       />
     </p>
   );

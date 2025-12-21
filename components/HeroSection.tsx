@@ -159,7 +159,7 @@ export default function HeroSection() {
           </div>
 
           <div className="relative z-10 text-center text-white px-6 max-w-4xl">
-            <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
+            <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
               {section.title.split(" ").map((word, idx) => (
                 <span key={idx} className="word inline-block mr-2 opacity-0">
                   {word}
@@ -167,7 +167,7 @@ export default function HeroSection() {
               ))}
             </h1>
 
-            <p className="text-lg md:text-2xl mb-8">
+            <p className="text-lg md:text-3xl mb-8">
               {section.subtitle.split(" ").map((word, idx) => (
                 <span key={idx} className="subword inline-block mr-1 opacity-0">
                   {word}
