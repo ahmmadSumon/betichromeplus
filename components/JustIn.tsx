@@ -25,35 +25,49 @@ export function JustIn() {
   };
 
   useEffect(() => {
-    let mounted = true; // to prevent state update after unmount
+  let active = true;
 
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("/api/products", { cache: "no-store" });
-        const data = await res.json();
-        if (mounted) setProducts(data || []);
-      } catch (err) {
-        console.error("Failed to fetch products:", err);
-        if (mounted) setProducts([]);
-      } finally {
-        if (mounted) setLoading(false);
+  const fetchProducts = async (retry = 0) => {
+    try {
+      const res = await fetch("/api/products", {
+        cache: "no-store",
+      });
+
+      if (!res.ok) throw new Error("Failed");
+
+      const data = await res.json();
+      if (active) setProducts(data || []);
+    } catch (error) {
+      if (retry < 2) {
+        setTimeout(() => fetchProducts(retry + 1), 1000);
+      } else {
+        if (active) setProducts([]);
       }
-    };
+    } finally {
+      if (active) setLoading(false);
+    }
+  };
 
-    fetchProducts();
+  fetchProducts();
 
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  return () => {
+    active = false;
+  };
+}, []);
 
   if (loading) {
-    return (
-      <div className="py-20 text-center text-gray-500">
-        Loading products...
-      </div>
-    );
-  }
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4 py-10">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div
+          key={i}
+          className="h-64 bg-gray-200 animate-pulse rounded-lg"
+        />
+      ))}
+    </div>
+  );
+}
+
 
   if (!products.length) {
     return (
