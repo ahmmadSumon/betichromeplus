@@ -431,7 +431,7 @@ const router = useRouter();
 
               <div className="mt-4 space-y-4 flex flex-col">
                 <Link href="/">HOME</Link>  
-                <Link href="/allproducts">WINTER 24/25</Link>
+                <Link href="/winter">WINTER 24/25</Link>
 
                 <div>
                   <Button variant="ghost" className="w-full text-left">

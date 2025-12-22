@@ -1,5 +1,6 @@
 import React from "react";
 import { ThreeDCardDemo } from "./ThreeDCardDemo";
+import { Link } from "lucide-react";
 
 const TwoSection = () => {
   return (
@@ -13,8 +14,13 @@ const TwoSection = () => {
           px-3 sm:px-6
         "
       >
-        <ThreeDCardDemo image="/image/slide1.jpg" name="Premium Jacket" />
-        <ThreeDCardDemo image="/image/slide2.jpg" name="Premium Jacket" />
+   
+        
+        <ThreeDCardDemo image="/image/slide1.jpg" name="Winter" />
+        
+        
+        <ThreeDCardDemo image="/image/slide2.jpg" name="Mens" />
+        
       </div>
     </section>
   );
