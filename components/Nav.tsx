@@ -100,7 +100,7 @@ const router = useRouter();
           </Link>
 
           <Link
-            href="/allproducts"
+            href="/winter"
             className="font-bold text-gray-800 dark:text-white hover:text-gray-600"
           >
             WINTER 24/25

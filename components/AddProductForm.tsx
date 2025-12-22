@@ -30,14 +30,32 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
 
-  /* Fetch collections */
+  /* ---------------- HELPERS ---------------- */
+  const addItem = (
+    value: string,
+    list: string[],
+    setList: React.Dispatch<React.SetStateAction<string[]>>
+  ) => {
+    if (!value.trim()) return;
+    if (list.includes(value)) return;
+    setList([...list, value]);
+  };
+
+  const removeItem = (
+    value: string,
+    setList: React.Dispatch<React.SetStateAction<string[]>>
+  ) => {
+    setList((prev) => prev.filter((v) => v !== value));
+  };
+
+  /* ---------------- FETCH COLLECTIONS ---------------- */
   useEffect(() => {
     fetch("/api/collections")
       .then((res) => res.json())
       .then(setAllCollections);
   }, []);
 
-  /* Load product for edit */
+  /* ---------------- LOAD PRODUCT FOR EDIT ---------------- */
   useEffect(() => {
     if (product) {
       setCollections(product.collections?.map((c: any) => c._id || c) || []);
@@ -49,6 +67,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
     }
   }, [product]);
 
+  /* ---------------- SUBMIT ---------------- */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -62,7 +81,10 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
       for (const file of imageFiles) {
         const fd = new FormData();
         fd.append("file", file);
-        const res = await fetch("/api/upload", { method: "POST", body: fd });
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: fd,
+        });
         const data = await res.json();
         imageUrls.push(data.url);
       }
@@ -102,12 +124,14 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
     }
   };
 
+  /* ---------------- UI ---------------- */
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl space-y-4">
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl space-y-5">
       <h2 className="text-xl font-semibold">
         {product ? "Edit Product" : "Add Product"}
       </h2>
 
+      {/* TITLE */}
       <input
         name="title"
         defaultValue={product?.title}
@@ -116,6 +140,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
         className="border p-3 rounded w-full"
       />
 
+      {/* DESCRIPTION */}
       <textarea
         name="description"
         defaultValue={product?.description}
@@ -133,7 +158,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
         <option value="Men">Men</option>
         <option value="Women">Women</option>
         <option value="Kids">Kids</option>
-         <option value="Winter">Winter</option>
+        <option value="Winter">Winter</option>
       </select>
 
       {/* COLLECTIONS */}
@@ -141,7 +166,10 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
         <p className="font-medium mb-2">Collections</p>
         <div className="grid grid-cols-2 gap-2">
           {allCollections.map((c) => (
-            <label key={c._id} className="flex gap-2 items-center border p-2 rounded">
+            <label
+              key={c._id}
+              className="flex gap-2 items-center border p-2 rounded"
+            >
               <input
                 type="checkbox"
                 checked={collections.includes(c._id)}
@@ -159,9 +187,101 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
         </div>
       </div>
 
-      <input type="number" name="price" defaultValue={product?.price} placeholder="Price" className="border p-3 rounded" />
-      <input type="number" name="quantity" defaultValue={product?.quantity} placeholder="Quantity" className="border p-3 rounded" />
+      {/* PRICE & QUANTITY */}
+      <div className="grid grid-cols-2 gap-4">
+        <input
+          type="number"
+          name="price"
+          defaultValue={product?.price}
+          placeholder="Price"
+          className="border p-3 rounded"
+        />
+        <input
+          type="number"
+          name="quantity"
+          defaultValue={product?.quantity}
+          placeholder="Quantity"
+          className="border p-3 rounded"
+        />
+      </div>
 
+      {/* SIZES */}
+      <div>
+        <p className="font-medium mb-2">Sizes (press Enter)</p>
+        <input
+          type="text"
+          placeholder="S, M, L, XL"
+          className="border p-2 rounded w-full mb-2"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addItem(
+                (e.target as HTMLInputElement).value.toUpperCase(),
+                sizes,
+                setSizes
+              );
+              (e.target as HTMLInputElement).value = "";
+            }
+          }}
+        />
+        <div className="flex flex-wrap gap-2">
+          {sizes.map((size) => (
+            <span
+              key={size}
+              className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-2 text-sm"
+            >
+              {size}
+              <button
+                type="button"
+                onClick={() => removeItem(size, setSizes)}
+                className="text-red-500 font-bold"
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* COLORS */}
+      <div>
+        <p className="font-medium mb-2">Colors (press Enter)</p>
+        <input
+          type="text"
+          placeholder="Black, Red, Blue"
+          className="border p-2 rounded w-full mb-2"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addItem(
+                (e.target as HTMLInputElement).value,
+                colors,
+                setColors
+              );
+              (e.target as HTMLInputElement).value = "";
+            }
+          }}
+        />
+        <div className="flex flex-wrap gap-2">
+          {colors.map((color) => (
+            <span
+              key={color}
+              className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-2 text-sm"
+            >
+              {color}
+              <button
+                type="button"
+                onClick={() => removeItem(color, setColors)}
+                className="text-red-500 font-bold"
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* IMAGES */}
       <input
         type="file"
         multiple
@@ -174,7 +294,21 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
         }}
       />
 
-      <button className="bg-black text-white p-3 rounded w-full">
+      <div className="flex gap-2 flex-wrap">
+        {previewImages.map((img, i) => (
+          <img
+            key={i}
+            src={img}
+            className="w-20 h-20 object-cover rounded"
+          />
+        ))}
+      </div>
+
+      {/* SUBMIT */}
+      <button
+        disabled={loading}
+        className="bg-black text-white p-3 rounded w-full"
+      >
         {loading ? "Saving..." : "Save Product"}
       </button>
     </form>
