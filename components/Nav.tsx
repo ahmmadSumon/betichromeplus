@@ -1,5 +1,6 @@
 "use client";
 import { useSession, signOut } from "next-auth/react";
+import { useCartStore } from "@/store/cartStore";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -26,6 +27,7 @@ import SearchBar from "./Search";
 import { useRouter } from "next/navigation";
 
 
+
 /**
  * Desktop dropdown approach:
  * - Uses `group` + `group-hover` to show dropdown on hover.
@@ -41,8 +43,16 @@ const Nav: React.FC = () => {
   const [shopOpen, setShopOpen] = useState(false); // click toggle desktop
   const [orderOpen, setOrderOpen] = useState(false); // click toggle desktop
 
+
+  const cart = useCartStore((state) => state.cart);
+
+  // total items count (quantity based)
+  const totalItems = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
   // Dummy counts (replace with real logic)
-  const [cart] = useState<number>(2);
+ 
   const [wishlist] = useState<number>(1);
 
   const shopRef = useRef<HTMLDivElement | null>(null);
@@ -231,9 +241,11 @@ const router = useRouter();
           <div className="relative">
             <Link href="/cart" className="inline-block">
               <FiShoppingCart size={22} className="cursor-pointer" />
-              <span className="w-5 h-5 bg-black text-white rounded-full absolute left-3 -top-5 text-xs flex items-center justify-center">
-                {cart}
-              </span>
+         {totalItems > 0 && (
+          <span className="w-5 h-5 bg-black text-white rounded-full absolute left-3 -top-5 text-xs flex items-center justify-center">
+            {totalItems}
+          </span>
+        )}
             </Link>
           </div>
 
@@ -336,9 +348,11 @@ const router = useRouter();
           <div className="relative mx-2">
             <Link href="/cart" className="inline-block">
               <FiShoppingCart size={22} />
-              <span className="w-5 h-5 bg-black text-white rounded-full absolute left-3 -top-5 text-xs flex items-center justify-center">
-                {cart}
-              </span>
+               {totalItems > 0 && (
+          <span className="w-5 h-5 bg-black text-white rounded-full absolute left-3 -top-5 text-xs flex items-center justify-center">
+            {totalItems}
+          </span>
+        )}
             </Link>
           </div>
           <div ref={accountRef} className="relative mx-2">
