@@ -45,7 +45,7 @@
     left: -250%;
     width: 300%;
     height: 100%;
-    background: #99070f;
+    background: #000;
     z-index: 2;
     border-radius: 150px;
     transition: 1.8s ease-in-out;
