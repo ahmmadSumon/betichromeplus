@@ -4,25 +4,36 @@ import Product from "@/models/Product";
 
 export const dynamic = "force-dynamic";
 
+/* ---------- GET PRODUCTS ---------- */
 export async function GET() {
-  const start = Date.now();
+  await connectDB();
+
+  const products = await Product.find(
+    {},
+    { title: 1, images: 1, price: 1 }
+  )
+    .sort({ createdAt: -1 })
+    .limit(8)
+    .lean();
+
+  return NextResponse.json(products);
+}
+
+/* ---------- ADD PRODUCT (🔥 MISSING PART) ---------- */
+export async function POST(req: Request) {
+  await connectDB();
 
   try {
-    await connectDB();
+    const body = await req.json();
 
-    const products = await Product.find(
-      {},                         // filter
-      { title: 1, images: 1, price: 1 } // projection (IMPORTANT)
-    )
-      .sort({ createdAt: -1 })
-      .limit(8)                   // 🔥 LIMIT
-      .lean();
+    const product = await Product.create(body);
 
-    console.log("Products API time:", Date.now() - start, "ms");
-
-    return NextResponse.json(products);
-  } catch (err) {
-    console.error("API ERROR:", err);
-    return NextResponse.json([], { status: 500 });
+    return NextResponse.json(product, { status: 201 });
+  } catch (error) {
+    console.error("CREATE PRODUCT ERROR:", error);
+    return NextResponse.json(
+      { error: "Failed to create product" },
+      { status: 500 }
+    );
   }
 }
