@@ -79,14 +79,34 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
     if (imageFiles.length > 0) {
       imageUrls = [];
       for (const file of imageFiles) {
+        // Check file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          toast.error(`File ${file.name} is too large. Max size is 5MB.`);
+          setLoading(false);
+          return;
+        }
+
         const fd = new FormData();
         fd.append("file", file);
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: fd,
-        });
-        const data = await res.json();
-        imageUrls.push(data.url);
+        
+        try {
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            body: fd,
+          });
+          
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Upload failed for ${file.name}`);
+          }
+          
+          const data = await res.json();
+          imageUrls.push(data.url);
+        } catch (uploadError: any) {
+          toast.error(`Image upload failed: ${uploadError.message}`);
+          setLoading(false);
+          return;
+        }
       }
     }
 
@@ -282,17 +302,30 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
       </div>
 
       {/* IMAGES */}
-      <input
-        type="file"
-        multiple
-        onChange={(e) => {
-          if (e.target.files) {
-            const files = Array.from(e.target.files);
-            setImageFiles(files);
-            setPreviewImages(files.map((f) => URL.createObjectURL(f)));
-          }
-        }}
-      />
+      <div>
+        <p className="font-medium mb-2">Images (max 5MB each)</p>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={(e) => {
+            if (e.target.files) {
+              const files = Array.from(e.target.files);
+              
+              // Validate file sizes
+              const oversizedFiles = files.filter(f => f.size > 5 * 1024 * 1024);
+              if (oversizedFiles.length > 0) {
+                toast.error(`Files too large: ${oversizedFiles.map(f => f.name).join(', ')}. Max size is 5MB.`);
+                return;
+              }
+              
+              setImageFiles(files);
+              setPreviewImages(files.map((f) => URL.createObjectURL(f)));
+            }
+          }}
+          className="border p-2 rounded w-full"
+        />
+      </div>
 
       <div className="flex gap-2 flex-wrap">
         {previewImages.map((img, i) => (
