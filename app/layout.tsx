@@ -5,7 +5,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Providers from "./Providers";
 import { Toaster } from "sonner";
-
+import LenisProvider from "@/components/LenisProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,13 +30,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-          
-          <Nav />
-          {children}
-          <Footer />
-          <Toaster position="top-right" />
-        </Providers>
+        <LenisProvider>
+          <Providers>
+            <Nav />
+            {children}
+            <Footer />
+            <Toaster position="top-right" />
+          </Providers>
+        </LenisProvider>
       </body>
     </html>
   );
