@@ -1,7 +1,7 @@
-import { connectDB } from "@/lib/mongodb";
-import Product from "@/models/Product";
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 interface ProductType {
@@ -11,18 +11,57 @@ interface ProductType {
   images: string[];
 }
 
-async function getProducts(): Promise<ProductType[]> {
-  await connectDB(); // Connect to MongoDB
+const Page = () => {
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const observerRef = useRef<HTMLDivElement>(null);
 
-  const products = await Product.find({}, { title: 1, images: 1, price: 1 })
-    .sort({ createdAt: -1 })
-    .lean();
+  const fetchProducts = async (pageNum: number) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/products?page=${pageNum}&limit=10`);
+      const data = await res.json();
+      
+      if (pageNum === 1) {
+        setProducts(data.products);
+      } else {
+        setProducts(prev => [...prev, ...data.products]);
+      }
+      
+      setHasMore(data.hasMore);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  return products;
-}
+  useEffect(() => {
+    fetchProducts(1);
+  }, []);
 
-const Page = async () => {
-  const products = await getProducts();
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !loading && hasMore) {
+          setPage(prev => {
+            const nextPage = prev + 1;
+            fetchProducts(nextPage);
+            return nextPage;
+          });
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [loading, hasMore]);
 
   return (
     <div className="bg-white w-full py-10">
@@ -52,11 +91,22 @@ const Page = async () => {
           ))}
         </div>
 
-        <div className="flex justify-center mt-10">
-          <Button variant="outline" className="px-10 py-6 text-base">
-            Load More
-          </Button>
-        </div>
+        {/* Loading indicator */}
+        {loading && (
+          <div className="flex justify-center mt-8">
+            <div className="text-gray-500">Loading more products...</div>
+          </div>
+        )}
+
+        {/* Intersection observer target */}
+        <div ref={observerRef} className="h-10" />
+
+        {/* End message */}
+        {!hasMore && products.length > 0 && (
+          <div className="flex justify-center mt-8">
+            <div className="text-gray-500">No more products to load</div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -29,7 +29,7 @@ export function ProductCarousel() {
       try {
         const res = await fetch("/api/products", { cache: "no-store" });
         const data = await res.json();
-        if (mounted) setProducts((data || []).slice(-8).reverse());
+        if (mounted) setProducts(((data.products || data) || []).slice(-8).reverse());
       } catch (err) {
         console.error("Failed to fetch products:", err);
       } finally {

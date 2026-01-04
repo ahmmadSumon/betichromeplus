@@ -1,38 +1,34 @@
-import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
+import { NextRequest, NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
-
-/* ---------- GET PRODUCTS ---------- */
-export async function GET() {
-  await connectDB();
-
-  const products = await Product.find(
-    {},
-    { title: 1, images: 1, price: 1 }
-  )
-    .sort({ createdAt: -1 })
-    .limit(8)
-    .lean();
-
-  return NextResponse.json(products);
-}
-
-/* ---------- ADD PRODUCT (🔥 MISSING PART) ---------- */
-export async function POST(req: Request) {
-  await connectDB();
-
+export async function GET(request: NextRequest) {
   try {
-    const body = await req.json();
+    await connectDB();
 
-    const product = await Product.create(body);
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const skip = (page - 1) * limit;
 
-    return NextResponse.json(product, { status: 201 });
+    const products = await Product.find({}, { title: 1, images: 1, price: 1 })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    const totalProducts = await Product.countDocuments();
+    const hasMore = skip + limit < totalProducts;
+
+    return NextResponse.json({
+      products,
+      hasMore,
+      totalProducts,
+      currentPage: page,
+    });
   } catch (error) {
-    console.error("CREATE PRODUCT ERROR:", error);
     return NextResponse.json(
-      { error: "Failed to create product" },
+      { error: "Failed to fetch products" },
       { status: 500 }
     );
   }
