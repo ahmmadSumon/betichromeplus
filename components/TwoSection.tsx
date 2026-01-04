@@ -15,7 +15,7 @@ const TwoSection = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     if (sectionRef.current) {
@@ -53,7 +53,7 @@ const TwoSection = () => {
               ? "opacity-100 translate-y-0 scale-100"
               : "opacity-0 translate-y-16 scale-95"
           }`}
-          style={{ transitionDelay: "150ms" }}
+          style={{ transitionDelay: "100ms" }}
         >
           <ThreeDCardDemo image="/image/slide2.jpg" name="Mens" />
         </div>

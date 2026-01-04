@@ -27,7 +27,7 @@ const ThreeSection = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     if (sectionRef.current) {
@@ -56,7 +56,7 @@ const ThreeSection = () => {
                 ? "opacity-100 translate-y-0 scale-100"
                 : "opacity-0 translate-y-16 scale-95"
             }`}
-            style={{ transitionDelay: `${index * 150}ms` }}
+            style={{ transitionDelay: `${index * 100}ms` }}
           >
             <ThreeDCardDemo
               image={item.image}
