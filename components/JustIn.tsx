@@ -107,6 +107,18 @@ export function JustIn() {
             );
           })}
         </div>
+
+        <div className="text-center mt-8">
+          <Link
+            href="/all-products"
+            className={`inline-block bg-black text-white px-8 py-3 hover:bg-gray-800 transition-all duration-300 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+            style={{ transitionDelay: `${products.length * 150 + 200}ms` }}
+          >
+            Show All Products
+          </Link>
+        </div>
       </div>
     </div>
   );
