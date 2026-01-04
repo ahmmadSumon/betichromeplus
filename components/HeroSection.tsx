@@ -1,12 +1,8 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
-
-gsap.registerPlugin(ScrollTrigger);
+import { FaFacebook, FaInstagram, FaWhatsapp, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface Section {
   title: string;
@@ -38,152 +34,129 @@ const sections: Section[] = [
 ];
 
 export default function HeroSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const panels = gsap.utils.toArray<HTMLDivElement>(".panel");
-
-      panels.forEach((panel) => {
-        const titleWords = panel.querySelectorAll<HTMLElement>(".word");
-        const subtitleWords = panel.querySelectorAll<HTMLElement>(".subword");
-        const button = panel.querySelector<HTMLButtonElement>("button");
-        const bg = panel.querySelector<HTMLImageElement>("img");
-
-        if (!titleWords.length || !subtitleWords.length || !button || !bg)
-          return;
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: panel,
-            start: "top 70%",
-            toggleActions: "play none none reverse",
-          },
-        });
-
-        // Title animation
-        tl.fromTo(
-          titleWords,
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, duration: 1, ease: "power4.out", stagger: 0.06 }
-        );
-
-        // Subtitle animation
-        tl.fromTo(
-          subtitleWords,
-          { opacity: 0, y: 25 },
-          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.03 },
-          "-=0.6"
-        );
-
-        // Button animation
-        tl.fromTo(
-          button,
-          { opacity: 0, y: 30, scale: 0.95 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.4)" },
-          "-=0.4"
-        );
-
-        // Background parallax
-        gsap.fromTo(
-          bg,
-          { scale: 1.15, y: -60 },
-          {
-            scale: 1,
-            y: 0,
-            ease: "none",
-            scrollTrigger: { trigger: panel, start: "top bottom", end: "bottom top", scrub: 0.6 },
-          }
-        );
-
-        // Pin panel
-        ScrollTrigger.create({
-          trigger: panel,
-          start: "top top",
-          end: "+=100%",
-          pin: true,
-          pinSpacing: false,
-          anticipatePin: 1,
-        });
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
+    // Trigger initial animation after component mounts
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % sections.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % sections.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + sections.length) % sections.length);
+
   return (
-    <div ref={containerRef}>
+    <div className="relative w-full h-screen overflow-hidden">
       {sections.map((section, i) => (
         <div
           key={i}
-          className="panel relative w-full h-screen flex items-center justify-center overflow-hidden"
+          className={`absolute inset-0 w-full h-full flex items-center justify-center transition-all duration-1000 ease-out ${
+            i === currentSlide ? "translate-x-0 opacity-100" : i < currentSlide ? "-translate-x-full opacity-0" : "translate-x-full opacity-0"
+          }`}
         >
           <img
             src={section.bg}
             alt={section.title}
-            className="absolute inset-0 w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[6000ms] ease-out ${
+              i === currentSlide ? "scale-100" : "scale-110"
+            }`}
           />
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60" />
 
-          {/* Footer UI */}
-          <div className="absolute bottom-10 left-0 right-0 flex justify-between items-center px-6 max-w-[1600px] mx-auto text-white z-20">
-            <div className="flex items-center gap-4">
-              <span className="text-sm font-semibold">Follow Us</span>
-              <div className="flex gap-4 text-xl">
-                <Link href="https://facebook.com" target="_blank">
-                  <FaFacebook className="hover:scale-125 transition" />
-                </Link>
-                <Link href="https://wa.me/8801700000000" target="_blank">
-                  <FaWhatsapp className="hover:scale-125 transition" />
-                </Link>
-                <Link href="https://instagram.com" target="_blank">
-                  <FaInstagram className="hover:scale-125 transition" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-sm rotate-90 tracking-wider">Scroll</span>
-              <svg
-                className="w-6 h-6 animate-bounce"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-
-          <div className="relative z-10 text-center text-white px-6 max-w-4xl">
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-              {section.title.split(" ").map((word, idx) => (
-                <span key={idx} className="word inline-block mr-2 opacity-0">
-                  {word}
-                </span>
-              ))}
+          <div className="relative z-10 text-center text-white px-6 max-w-5xl">
+            <h1 className={`text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tight transition-all duration-1200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+              i === currentSlide && isLoaded
+                ? "opacity-100 translate-x-0 blur-0" 
+                : "opacity-0 -translate-x-32 blur-sm"
+            }`}>
+              {section.title}
             </h1>
-
-            <p className="text-lg md:text-3xl mb-8">
-              {section.subtitle.split(" ").map((word, idx) => (
-                <span key={idx} className="subword inline-block mr-1 opacity-0">
-                  {word}
-                </span>
-              ))}
+            <p className={`text-xl md:text-4xl mb-12 font-light leading-relaxed transition-all duration-1200 delay-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+              i === currentSlide && isLoaded
+                ? "opacity-100 translate-x-0 blur-0" 
+                : "opacity-0 translate-x-32 blur-sm"
+            }`}>
+              {section.subtitle}
             </p>
-
-            {/* Button linking to /all-products */}
             <Link href="/all-products">
-              <button className="px-10 py-4 rounded-full bg-white text-black font-semibold hover:scale-105 hover:bg-gray-200 transition">
+              <button className={`px-12 py-5 rounded-full bg-white text-black text-lg font-bold hover:scale-110 hover:shadow-2xl hover:bg-gray-100 transition-all duration-1200 delay-600 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] backdrop-blur-sm ${
+                i === currentSlide && isLoaded
+                  ? "opacity-100 translate-x-0 translate-y-0 blur-0" 
+                  : "opacity-0 translate-x-32 translate-y-8 blur-sm"
+              }`}>
                 {section.button}
               </button>
             </Link>
           </div>
         </div>
       ))}
+
+      {/* Navigation Arrows */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-6 top-1/2 md:top-1/2 top-3/4 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
+      >
+        <FaChevronLeft size={24} />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute right-6 top-1/2 md:top-1/2 top-3/4 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
+      >
+        <FaChevronRight size={24} />
+      </button>
+
+      {/* Dots Indicator */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+        {sections.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className={`w-4 h-4 rounded-full transition-all duration-500 ease-out ${
+              i === currentSlide ? "bg-white scale-125" : "bg-white/40 hover:bg-white/60 hover:scale-110"
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Footer UI */}
+      <div className="absolute bottom-8 left-0 right-0 flex justify-between items-center px-8 max-w-[1600px] mx-auto text-white z-20">
+        <div className="flex items-center gap-6">
+          <span className="text-sm font-semibold tracking-wider">Follow Us</span>
+          <div className="flex gap-5 text-2xl">
+            <Link href="https://facebook.com" target="_blank">
+              <FaFacebook className="hover:scale-125 hover:text-blue-400 transition-all duration-300 ease-out" />
+            </Link>
+            <Link href="https://wa.me/8801700000000" target="_blank">
+              <FaWhatsapp className="hover:scale-125 hover:text-green-400 transition-all duration-300 ease-out" />
+            </Link>
+            <Link href="https://instagram.com" target="_blank">
+              <FaInstagram className="hover:scale-125 hover:text-pink-400 transition-all duration-300 ease-out" />
+            </Link>
+          </div>
+        </div>
+        
+        {/* Scroll Down Indicator */}
+        <div className="flex flex-col items-center gap-2 animate-bounce">
+          <span className="text-sm font-medium tracking-wider rotate-90 origin-center">Scroll</span>
+          <svg
+            className="w-6 h-6 animate-pulse"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </div>
+      </div>
     </div>
   );
 }

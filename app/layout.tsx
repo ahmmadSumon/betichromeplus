@@ -4,7 +4,8 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Providers from "./Providers";
-import { Toaster } from "sonner"; // ✅ import Sonner
+import { Toaster } from "sonner";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +31,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
+          
           <Nav />
           {children}
           <Footer />
-          <Toaster position="top-right" /> {/* ✅ Sonner toaster added */}
+          <Toaster position="top-right" />
         </Providers>
       </body>
     </html>

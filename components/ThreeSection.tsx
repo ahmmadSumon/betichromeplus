@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { ThreeDCardDemo } from "./ThreeDCardDemo";
 
 interface Collection {
@@ -11,6 +11,8 @@ interface Collection {
 
 const ThreeSection = () => {
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     fetch("/api/collections")
@@ -18,8 +20,25 @@ const ThreeSection = () => {
       .then((data) => setCollections(data));
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="bg-white w-full py-10">
+    <section ref={sectionRef} className="bg-white w-full py-10">
       <div
         className="
           mx-auto max-w-7xl
@@ -29,12 +48,21 @@ const ThreeSection = () => {
           px-3 sm:px-6
         "
       >
-        {collections.map((item) => (
-          <ThreeDCardDemo
+        {collections.map((item, index) => (
+          <div
             key={item._id}
-            image={item.image}
-            name={item.name}
-          />
+            className={`transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+              isVisible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-16 scale-95"
+            }`}
+            style={{ transitionDelay: `${index * 150}ms` }}
+          >
+            <ThreeDCardDemo
+              image={item.image}
+              name={item.name}
+            />
+          </div>
         ))}
       </div>
     </section>
