@@ -71,15 +71,15 @@ export default function HeroSection() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60" />
 
-          <div className="relative z-10 text-center text-white px-6 max-w-5xl">
-            <h1 className={`text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tight transition-all duration-1200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+          <div className="relative z-10 text-center text-white px-4 sm:px-6 max-w-5xl">
+            <h1 className={`text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-4 sm:mb-6 md:mb-8 leading-tight sm:leading-[0.9] tracking-tight transition-all duration-1200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
               i === currentSlide && isLoaded
                 ? "opacity-100 translate-x-0 blur-0" 
                 : "opacity-0 -translate-x-32 blur-sm"
             }`}>
               {section.title}
             </h1>
-            <p className={`text-xl md:text-4xl mb-12 font-light leading-relaxed transition-all duration-1200 delay-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+            <p className={`text-sm sm:text-lg md:text-2xl lg:text-4xl mb-6 sm:mb-8 md:mb-12 font-light leading-relaxed transition-all duration-1200 delay-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
               i === currentSlide && isLoaded
                 ? "opacity-100 translate-x-0 blur-0" 
                 : "opacity-0 translate-x-32 blur-sm"
@@ -87,7 +87,7 @@ export default function HeroSection() {
               {section.subtitle}
             </p>
             <Link href="/all-products">
-              <button className={`px-12 py-5 rounded-full bg-white text-black text-lg font-bold hover:scale-110 hover:shadow-2xl hover:bg-gray-100 transition-all duration-1200 delay-600 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] backdrop-blur-sm ${
+              <button className={`px-6 sm:px-8 md:px-12 py-3 sm:py-4 md:py-5 rounded-full bg-white text-black text-sm sm:text-base md:text-lg font-bold hover:scale-110 hover:shadow-2xl hover:bg-gray-100 transition-all duration-1200 delay-600 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] backdrop-blur-sm ${
                 i === currentSlide && isLoaded
                   ? "opacity-100 translate-x-0 translate-y-0 blur-0" 
                   : "opacity-0 translate-x-32 translate-y-8 blur-sm"
@@ -102,24 +102,24 @@ export default function HeroSection() {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-6 top-1/2 md:top-1/2 top-3/4 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
+        className="absolute left-2 sm:left-4 md:left-6 top-3/4 md:top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 md:p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
       >
-        <FaChevronLeft size={24} />
+        <FaChevronLeft size={16} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-6 top-1/2 md:top-1/2 top-3/4 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
+        className="absolute right-2 sm:right-4 md:right-6 top-3/4 md:top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 md:p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
       >
-        <FaChevronRight size={24} />
+        <FaChevronRight size={16} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
       </button>
 
       {/* Dots Indicator */}
-      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+      <div className="absolute bottom-16 sm:bottom-20 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-2 md:gap-3">
         {sections.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrentSlide(i)}
-            className={`w-4 h-4 rounded-full transition-all duration-500 ease-out ${
+            className={`w-3 h-3 md:w-4 md:h-4 rounded-full transition-all duration-500 ease-out ${
               i === currentSlide ? "bg-white scale-125" : "bg-white/40 hover:bg-white/60 hover:scale-110"
             }`}
           />
@@ -127,10 +127,10 @@ export default function HeroSection() {
       </div>
 
       {/* Footer UI */}
-      <div className="absolute bottom-8 left-0 right-0 flex justify-between items-center px-8 max-w-[1600px] mx-auto text-white z-20">
-        <div className="flex items-center gap-6">
-          <span className="text-sm font-semibold tracking-wider">Follow Us</span>
-          <div className="flex gap-5 text-2xl">
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-0 right-0 flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 md:px-8 max-w-[1600px] mx-auto text-white z-20 gap-4 sm:gap-0">
+        <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
+          <span className="text-xs sm:text-sm font-semibold tracking-wider hidden sm:block">Follow Us</span>
+          <div className="flex gap-3 sm:gap-4 md:gap-5 text-lg sm:text-xl md:text-2xl">
             <Link href="https://facebook.com" target="_blank">
               <FaFacebook className="hover:scale-125 hover:text-blue-400 transition-all duration-300 ease-out" />
             </Link>
@@ -144,10 +144,10 @@ export default function HeroSection() {
         </div>
         
         {/* Scroll Down Indicator */}
-        <div className="flex flex-col items-center gap-2 animate-bounce">
-          <span className="text-sm font-medium tracking-wider rotate-90 origin-center">Scroll</span>
+        <div className="flex flex-col items-center gap-1 sm:gap-2 animate-bounce">
+          <span className="text-xs sm:text-sm font-medium tracking-wider rotate-90 origin-center">Scroll</span>
           <svg
-            className="w-6 h-6 animate-pulse"
+            className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 animate-pulse"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}

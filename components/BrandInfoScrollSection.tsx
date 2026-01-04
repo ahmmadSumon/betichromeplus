@@ -38,13 +38,13 @@ const BrandInfoScrollSection = () => {
       <div className="absolute inset-0 bg-black/20" />
 
       {/* CONTENT */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 ">
         {/* GLASS CARD */}
         <div className={`backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl transition-all duration-1000 ease-out ${
           isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-16 scale-95"
         }`}>
           {/* BRAND */}
-          <h2 className={`text-3xl md:text-4xl font-extrabold text-white mb-4 transition-all duration-800 delay-200 ${
+          <h2 className={`text-3xl  md:text-4xl font-extrabold text-white mb-4 transition-all duration-800 delay-200 ${
             isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
           }`}>
             Betichrome Fashion Ltd.
