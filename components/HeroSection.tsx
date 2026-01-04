@@ -102,19 +102,19 @@ export default function HeroSection() {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-6 top-2/3 md:top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
+        className="absolute left-6 top-3/5 md:top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
       >
         <FaChevronLeft size={24} />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-6 top-2/3 md:top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
+        className="absolute right-6 top-3/5 md:top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
       >
         <FaChevronRight size={24} />
       </button>
 
       {/* Dots Indicator */}
-      <div className="absolute bottom-28 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+      <div className="absolute bottom-32 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-3">
         {sections.map((_, i) => (
           <button
             key={i}
@@ -127,7 +127,7 @@ export default function HeroSection() {
       </div>
 
       {/* Footer UI */}
-      <div className="absolute bottom-12 md:bottom-8 left-0 right-0 flex justify-between items-center px-8 max-w-[1600px] mx-auto text-white z-20">
+      <div className="absolute bottom-16 md:bottom-8 left-0 right-0 flex justify-between items-center px-8 max-w-[1600px] mx-auto text-white z-20">
         <div className="flex items-center gap-6">
           <span className="text-sm font-semibold tracking-wider">Follow Us</span>
           <div className="flex gap-5 text-2xl">
