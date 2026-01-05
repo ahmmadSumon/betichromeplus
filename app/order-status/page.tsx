@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -21,7 +21,7 @@ interface Order {
   subtotal: number;
 }
 
-export default function OrderStatusPage() {
+function OrderStatusContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("id");
   const [order, setOrder] = useState<Order | null>(null);
@@ -170,5 +170,17 @@ export default function OrderStatusPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OrderStatusPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 pt-24 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+      </div>
+    }>
+      <OrderStatusContent />
+    </Suspense>
   );
 }
