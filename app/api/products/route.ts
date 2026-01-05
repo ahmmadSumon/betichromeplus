@@ -45,3 +45,20 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export async function POST(request: NextRequest) {
+  try {
+    await connectDB();
+    const data = await request.json();
+    
+    const product = new Product(data);
+    await product.save();
+    
+    return NextResponse.json({ success: true, product });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to create product" },
+      { status: 500 }
+    );
+  }
+}
