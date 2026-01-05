@@ -87,7 +87,7 @@ export default function HeroSection() {
               {section.subtitle}
             </p>
             <Link href="/all-products">
-              <button className={`px-12 py-5 rounded-full bg-white text-black text-lg font-bold hover:scale-110 hover:shadow-2xl hover:bg-gray-100 transition-all duration-1200 delay-600 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] backdrop-blur-sm ${
+              <button className={`px-12 py-5 cursor-pointer rounded-full bg-white text-black text-lg font-bold hover:scale-110 hover:shadow-2xl hover:bg-gray-100 transition-all duration-1200 delay-600 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] backdrop-blur-sm ${
                 i === currentSlide && isLoaded
                   ? "opacity-100 translate-x-0 translate-y-0 blur-0" 
                   : "opacity-0 translate-x-32 translate-y-8 blur-sm"

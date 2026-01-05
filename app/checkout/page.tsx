@@ -2,9 +2,13 @@
 
 import { useCartStore } from "@/store/cartStore";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function CheckoutPage() {
   const cart = useCartStore((state) => state.cart);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const router = useRouter();
 
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -12,6 +16,99 @@ export default function CheckoutPage() {
   );
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [loading, setLoading] = useState(false);
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
+  const [orderId, setOrderId] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    company: "",
+    address: "",
+    apartment: "",
+    city: "",
+    district: "",
+    postcode: "",
+    phone: "",
+    email: "",
+    notes: "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (cart.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerInfo: formData,
+          items: cart,
+          subtotal,
+          paymentMethod,
+        }),
+      });
+
+      const result = await response.json();
+      console.log('Order creation response:', result);
+      
+      if (response.ok && result.success) {
+        setOrderId(result.orderId);
+        setOrderConfirmed(true);
+        clearCart();
+        toast.success("Order placed successfully!");
+      } else {
+        console.error('Order creation failed:', result);
+        toast.error(result.error || "Failed to place order");
+      }
+    } catch (error) {
+      console.error('Order submission error:', error);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (orderConfirmed) {
+    return (
+      <div className="bg-gray-50 min-h-screen py-12 flex items-center justify-center">
+        <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 text-center">
+          <div className="text-6xl mb-4">✅</div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Order Confirmed!
+          </h1>
+          <p className="text-gray-600 mb-4">
+            Your order has been placed successfully.
+          </p>
+          <p className="text-sm text-gray-500 mb-6">
+            Order ID: <span className="font-mono font-semibold">{orderId}</span>
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => router.push(`/order-status?id=${orderId}`)}
+              className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+            >
+              Check Order Process
+            </button>
+            <button
+              onClick={() => router.push("/")}
+              className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition"
+            >
+              Go to Home Page
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen py-12">
@@ -29,50 +126,95 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-8">
             <h2 className="text-xl font-semibold mb-6">Billing details</h2>
 
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <input className="input" placeholder="First name *" required />
-              <input className="input" placeholder="Last name *" required />
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <input 
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                className="input" 
+                placeholder="First name *" 
+                required 
+              />
+              <input 
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                className="input" 
+                placeholder="Last name *" 
+                required 
+              />
 
               <input
+                name="company"
+                value={formData.company}
+                onChange={handleInputChange}
                 className="input md:col-span-2"
                 placeholder="Company name (optional)"
               />
 
-              <select className="input md:col-span-2">
-                <option>Bangladesh</option>
-              </select>
-
               <input
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
                 className="input md:col-span-2"
                 placeholder="House number and street name *"
                 required
               />
 
               <input
+                name="apartment"
+                value={formData.apartment}
+                onChange={handleInputChange}
                 className="input md:col-span-2"
                 placeholder="Apartment, suite, unit, etc. (optional)"
               />
 
-              <input className="input" placeholder="Town / City *" required />
-              <input className="input" placeholder="District *" required />
+              <input 
+                name="city"
+                value={formData.city}
+                onChange={handleInputChange}
+                className="input" 
+                placeholder="Town / City *" 
+                required 
+              />
+              <input 
+                name="district"
+                value={formData.district}
+                onChange={handleInputChange}
+                className="input" 
+                placeholder="District *" 
+                required 
+              />
 
               <input
+                name="postcode"
+                value={formData.postcode}
+                onChange={handleInputChange}
                 className="input"
                 placeholder="Postcode / ZIP (optional)"
               />
 
               <input
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
                 className="input md:col-span-2"
                 placeholder="Billing Mobile Number *"
                 required
               />
 
               <input
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
                 className="input md:col-span-2"
                 placeholder="Billing Email (optional)"
               />
 
               <textarea
+                name="notes"
+                value={formData.notes}
+                onChange={handleInputChange}
                 className="input md:col-span-2 min-h-[100px]"
                 placeholder="Order notes (optional)"
               />
@@ -158,8 +300,12 @@ export default function CheckoutPage() {
               your experience throughout this website.
             </p>
 
-            <button className="w-full mt-6 bg-black text-white py-3 rounded-lg font-medium hover:opacity-90 transition">
-              Place Order
+            <button 
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full mt-6 bg-black text-white py-3 rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+            >
+              {loading ? "Processing..." : "Place Order"}
             </button>
           </div>
         </div>

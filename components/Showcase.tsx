@@ -24,7 +24,7 @@ const Showcase = () => {
   Handpicked fashion essentials crafted for comfort, confidence, and timeless appeal.
 </p>
 
-<button className="mt-8 px-8 py-4 rounded-full bg-black text-white font-semibold hover:bg-gray-800 transition">
+<button className="mt-8 px-8 cursor-pointer py-4 rounded-full bg-black text-white font-semibold hover:bg-gray-800 transition">
   Shop the Collection
 </button>
 
