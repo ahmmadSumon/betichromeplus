@@ -27,22 +27,38 @@ export default function OrderStatusPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (orderId) {
-      fetch(`/api/orders/${orderId}`)
-        .then(res => res.json())
-        .then(data => {
-          console.log('Order data:', data);
-          setOrder(data);
-        })
-        .catch((error) => {
-          console.error('Error fetching order:', error);
-          setOrder(null);
-        })
-        .finally(() => setLoading(false));
-    } else {
+  const fetchOrder = async () => {
+    if (!orderId) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/orders/${orderId}`);
+      const data = await res.json();
+      console.log('Order data:', data);
+      
+      if (data.error) {
+        setOrder(null);
+      } else {
+        setOrder(data);
+      }
+    } catch (error) {
+      console.error('Error fetching order:', error);
+      setOrder(null);
+    } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchOrder();
+  }, [orderId]);
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(fetchOrder, 30000);
+    return () => clearInterval(interval);
   }, [orderId]);
 
   if (loading) {
@@ -53,7 +69,7 @@ export default function OrderStatusPage() {
     );
   }
 
-  if (!order || !order.customerInfo) {
+  if (!order || order.error ) {
     return (
       <div className="min-h-screen bg-gray-50 pt-24 flex items-center justify-center">
         <div className="text-center">
@@ -82,8 +98,18 @@ export default function OrderStatusPage() {
           <h1 className="text-2xl font-bold mb-6">Order Status</h1>
           
           <div className="mb-8">
-            <p className="text-sm text-gray-500">Order ID</p>
-            <p className="font-mono font-semibold">{order.orderId}</p>
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm text-gray-500">Order ID</p>
+                <p className="font-mono font-semibold">{order.orderId}</p>
+              </div>
+              <button
+                onClick={fetchOrder}
+                className="text-sm text-blue-600 hover:text-blue-800 transition"
+              >
+                🔄 Refresh Status
+              </button>
+            </div>
           </div>
 
           {/* Status Progress */}

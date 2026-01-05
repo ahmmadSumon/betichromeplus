@@ -4,18 +4,29 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  console.log('=== ORDER API CALLED ===');
+  
+  const { id } = await params;
+  console.log('Looking for order with ID:', id);
+  
   try {
     await connectDB();
-    const order = await Order.findOne({ orderId: params.id });
+    console.log('Database connected successfully');
+    
+    const order = await Order.findOne({ orderId: id });
+    console.log('Database query result:', order);
     
     if (!order) {
+      console.log('Order not found in database');
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
     
+    console.log('Order found, returning:', order);
     return NextResponse.json(order);
   } catch (error) {
+    console.error('Database error:', error);
     return NextResponse.json(
       { error: "Failed to fetch order" },
       { status: 500 }
@@ -25,14 +36,15 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
     const { status } = await request.json();
+    const { id } = await params;
     
     const order = await Order.findOneAndUpdate(
-      { orderId: params.id },
+      { orderId: id },
       { status },
       { new: true }
     );
