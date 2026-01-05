@@ -227,23 +227,38 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
 
       {/* SIZES */}
       <div>
-        <p className="font-medium mb-2">Sizes (press Enter)</p>
-        <input
-          type="text"
-          placeholder="S, M, L, XL"
-          className="border p-2 rounded w-full mb-2"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              addItem(
-                (e.target as HTMLInputElement).value.toUpperCase(),
-                sizes,
-                setSizes
-              );
-              (e.target as HTMLInputElement).value = "";
-            }
-          }}
-        />
+        <p className="font-medium mb-2">Sizes</p>
+        <div className="flex gap-2 mb-2">
+          <input
+            type="text"
+            placeholder="S, M, L, XL"
+            className="border p-2 rounded flex-1"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addItem(
+                  (e.target as HTMLInputElement).value.toUpperCase(),
+                  sizes,
+                  setSizes
+                );
+                (e.target as HTMLInputElement).value = "";
+              }
+            }}
+          />
+          <button
+            type="button"
+            onClick={(e) => {
+              const input = (e.target as HTMLButtonElement).previousElementSibling as HTMLInputElement;
+              if (input.value.trim()) {
+                addItem(input.value.toUpperCase(), sizes, setSizes);
+                input.value = "";
+              }
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Add
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2">
           {sizes.map((size) => (
             <span
@@ -265,23 +280,38 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
 
       {/* COLORS */}
       <div>
-        <p className="font-medium mb-2">Colors (press Enter)</p>
-        <input
-          type="text"
-          placeholder="Black, Red, Blue"
-          className="border p-2 rounded w-full mb-2"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              addItem(
-                (e.target as HTMLInputElement).value,
-                colors,
-                setColors
-              );
-              (e.target as HTMLInputElement).value = "";
-            }
-          }}
-        />
+        <p className="font-medium mb-2">Colors</p>
+        <div className="flex gap-2 mb-2">
+          <input
+            type="text"
+            placeholder="Black, Red, Blue"
+            className="border p-2 rounded flex-1"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addItem(
+                  (e.target as HTMLInputElement).value,
+                  colors,
+                  setColors
+                );
+                (e.target as HTMLInputElement).value = "";
+              }
+            }}
+          />
+          <button
+            type="button"
+            onClick={(e) => {
+              const input = (e.target as HTMLButtonElement).previousElementSibling as HTMLInputElement;
+              if (input.value.trim()) {
+                addItem(input.value, colors, setColors);
+                input.value = "";
+              }
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Add
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2">
           {colors.map((color) => (
             <span

@@ -14,16 +14,18 @@ export const ProductTable: React.FC<ProductTableProps> = ({
   onEdit,
 }) => {
   const [products, setProducts] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
 
-  const fetchProducts = async () => {
-    const res = await fetch("/api/products");
+  const fetchProducts = async (searchTerm = "") => {
+    const url = searchTerm ? `/api/products?search=${encodeURIComponent(searchTerm)}` : "/api/products";
+    const res = await fetch(url);
     const data = await res.json();
     setProducts(data.products || []);
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, [refreshTrigger]);
+    fetchProducts(search);
+  }, [refreshTrigger, search]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
@@ -37,89 +39,98 @@ export const ProductTable: React.FC<ProductTableProps> = ({
     }
 
     toast.success("Product deleted");
-    fetchProducts();
+    fetchProducts(search);
   };
 
-  if (products.length === 0) {
-    return (
-      <p className="text-center mt-6 text-gray-500">
-        No products available.
-      </p>
-    );
-  }
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {products.map((p) => (
-        <div
-          key={p._id}
-          className="bg-white shadow-md rounded-lg overflow-hidden border flex flex-col"
-        >
-          {/* Image */}
-          <div className="relative h-40 w-full">
-            {p.images && p.images.length > 0 ? (
-              <Image
-                src={p.images[0]}
-                alt={p.title}
-                fill
-                sizes="100vw"
-                style={{ objectFit: "cover" }}
-                unoptimized
-              />
-            ) : (
-              <div className="bg-gray-200 w-full h-full flex items-center justify-center text-gray-500">
-                No Image
+    <div>
+      {/* Search Bar */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+        />
+      </div>
+
+      {products.length === 0 ? (
+        <p className="text-center mt-6 text-gray-500">
+          {search ? "No products found." : "No products available."}
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {products.map((p) => (
+            <div
+              key={p._id}
+              className="bg-white shadow-md rounded-lg overflow-hidden border flex flex-col"
+            >
+              {/* Image */}
+              <div className="relative h-40 w-full">
+                {p.images && p.images.length > 0 ? (
+                  <Image
+                    src={p.images[0]}
+                    alt={p.title}
+                    fill
+                    sizes="100vw"
+                    style={{ objectFit: "cover" }}
+                    unoptimized
+                  />
+                ) : (
+                  <div className="bg-gray-200 w-full h-full flex items-center justify-center text-gray-500">
+                    No Image
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          {/* Product Info */}
-{/* Product Info */}
-<div className="p-3 flex flex-col gap-1 flex-1">
-  <h3 className="font-semibold text-gray-800 truncate">{p.title}</h3>
+              {/* Product Info */}
+              <div className="p-3 flex flex-col gap-1 flex-1">
+                <h3 className="font-semibold text-gray-800 truncate">{p.title}</h3>
 
-  <p className="text-sm text-gray-500 truncate">
-    {typeof p.category === "string" ? p.category : p.category?.name}
-  </p>
+                <p className="text-sm text-gray-500 truncate">
+                  {typeof p.category === "string" ? p.category : p.category?.name}
+                </p>
 
-  {/* Collections */}
-  <div className="flex flex-wrap gap-1 mt-1">
-    {p.collections?.map((c: any, i: number) => (
-      <span
-        key={c._id || i}
-        className="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full text-xs"
-      >
-        {typeof c === "string" ? c : c.name}
-      </span>
-    ))}
-  </div>
+                {/* Collections */}
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {p.collections?.map((c: any, i: number) => (
+                    <span
+                      key={c._id || i}
+                      className="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full text-xs"
+                    >
+                      {typeof c === "string" ? c : c.name}
+                    </span>
+                  ))}
+                </div>
 
-  {/* Price & Quantity */}
-  <div className="flex justify-between items-center mt-2">
-    <span className="font-medium text-gray-700">TK{p.price}</span>
-    <span className="text-sm text-gray-500">{p.quantity} pcs</span>
-  </div>
+                {/* Price & Quantity */}
+                <div className="flex justify-between items-center mt-2">
+                  <span className="font-medium text-gray-700">TK{p.price}</span>
+                  <span className="text-sm text-gray-500">{p.quantity} pcs</span>
+                </div>
 
-  {/* Actions */}
-  <div className="flex gap-2 mt-3">
-    <button
-      onClick={() => onEdit?.(p)}
-      className="flex-1 bg-yellow-400 text-white text-sm py-1 rounded hover:bg-yellow-500"
-    >
-      Edit
-    </button>
+                {/* Actions */}
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => onEdit?.(p)}
+                    className="flex-1 bg-yellow-400 text-white text-sm py-1 rounded hover:bg-yellow-500"
+                  >
+                    Edit
+                  </button>
 
-    <button
-      onClick={() => handleDelete(p._id)}
-      className="flex-1 bg-red-500 text-white text-sm py-1 rounded hover:bg-red-600"
-    >
-      Delete
-    </button>
-  </div>
-</div>
-
+                  <button
+                    onClick={() => handleDelete(p._id)}
+                    className="flex-1 bg-red-500 text-white text-sm py-1 rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 };
