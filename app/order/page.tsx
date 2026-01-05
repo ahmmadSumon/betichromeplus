@@ -1,4 +1,19 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 export default function OrderPage() {
+  const [orderId, setOrderId] = useState("");
+  const router = useRouter();
+
+  const handleTrackOrder = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (orderId.trim()) {
+      router.push(`/order-status?id=${orderId.trim()}`);
+    }
+  };
+
   return (
     <div className="bg-white w-full mt-10 py-12">
       <div className="max-w-4xl mx-auto px-4 space-y-10">
@@ -6,6 +21,26 @@ export default function OrderPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-center">
           Order & Shipping Information
         </h1>
+
+        {/* ORDER TRACKING */}
+        <section className="bg-blue-50 p-6 rounded-lg">
+          <h2 className="text-2xl font-semibold mb-4">📦 Track Your Order</h2>
+          <form onSubmit={handleTrackOrder} className="flex gap-3">
+            <input
+              type="text"
+              value={orderId}
+              onChange={(e) => setOrderId(e.target.value)}
+              placeholder="Enter your Order ID (e.g., ORD-1234567890-abc123)"
+              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium"
+            >
+              Track Order
+            </button>
+          </form>
+        </section>
 
         {/* ORDERING PROCESS */}
         <section className="space-y-4">

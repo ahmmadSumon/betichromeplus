@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema({
   orderId: { type: String, required: true, unique: true },
+  userId: String, // User ID from session
+  userEmail: String, // For linking orders to logged-in users
   customerInfo: {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },

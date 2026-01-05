@@ -18,7 +18,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
   const fetchProducts = async () => {
     const res = await fetch("/api/products");
     const data = await res.json();
-    setProducts(data);
+    setProducts(data.products || []);
   };
 
   useEffect(() => {
