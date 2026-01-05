@@ -69,7 +69,7 @@ export default function OrderStatusPage() {
     );
   }
 
-  if (!order || order.error ) {
+  if (!order) {
     return (
       <div className="min-h-screen bg-gray-50 pt-24 flex items-center justify-center">
         <div className="text-center">
