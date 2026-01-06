@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
 import { LoadingCard } from "./ui/loading";
 
 interface ProductTableProps {
