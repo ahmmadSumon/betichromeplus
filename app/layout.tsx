@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Providers from "./Providers";
 import { Toaster } from "sonner";
 import LenisProvider from "@/components/LenisProvider";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +33,11 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LenisProvider>
           <Providers>
-            <Nav />
-            {children}
-            <Footer />
+            <ErrorBoundary>
+              <Nav />
+              {children}
+              <Footer />
+            </ErrorBoundary>
             <Toaster position="top-right" />
           </Providers>
         </LenisProvider>

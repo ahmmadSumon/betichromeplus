@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { toast } from "sonner";
+import { LoadingCard } from "./ui/loading";
 
 interface ProductTableProps {
   refreshTrigger?: boolean;
@@ -15,17 +15,33 @@ export const ProductTable: React.FC<ProductTableProps> = ({
 }) => {
   const [products, setProducts] = useState<any[]>([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const fetchProducts = async (searchTerm = "") => {
-    const url = searchTerm ? `/api/products?search=${encodeURIComponent(searchTerm)}` : "/api/products";
-    const res = await fetch(url);
-    const data = await res.json();
-    setProducts(data.products || []);
+    setLoading(true);
+    try {
+      const url = searchTerm ? `/api/products?search=${encodeURIComponent(searchTerm)}` : "/api/products";
+      const res = await fetch(url);
+      const data = await res.json();
+      setProducts(data.products || []);
+    } catch (error) {
+      toast.error("Failed to fetch products");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    fetchProducts(search);
-  }, [refreshTrigger, search]);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    fetchProducts(debouncedSearch);
+  }, [refreshTrigger, debouncedSearch]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
@@ -55,7 +71,13 @@ export const ProductTable: React.FC<ProductTableProps> = ({
         />
       </div>
 
-      {products.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <LoadingCard key={i} />
+          ))}
+        </div>
+      ) : products.length === 0 ? (
         <p className="text-center mt-6 text-gray-500">
           {search ? "No products found." : "No products available."}
         </p>

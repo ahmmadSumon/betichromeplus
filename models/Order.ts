@@ -30,4 +30,11 @@ const OrderSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Database indexes for better performance
+OrderSchema.index({ orderId: 1 }); // Order lookup
+OrderSchema.index({ userEmail: 1, createdAt: -1 }); // User orders
+OrderSchema.index({ userId: 1, createdAt: -1 }); // User orders by ID
+OrderSchema.index({ status: 1, createdAt: -1 }); // Admin order management
+OrderSchema.index({ createdAt: -1 }); // Latest orders
+
 export default mongoose.models.Order || mongoose.model("Order", OrderSchema);

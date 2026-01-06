@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { FaFacebook, FaInstagram, FaWhatsapp, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface Section {
@@ -62,10 +63,13 @@ export default function HeroSection() {
             i === currentSlide ? "translate-x-0 opacity-100" : i < currentSlide ? "-translate-x-full opacity-0" : "translate-x-full opacity-0"
           }`}
         >
-          <img
+          <Image
             src={section.bg}
             alt={section.title}
-            className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[6000ms] ease-out ${
+            fill
+            priority={i === 0}
+            sizes="100vw"
+            className={`object-cover transition-transform duration-[6000ms] ease-out ${
               i === currentSlide ? "scale-100" : "scale-110"
             }`}
           />
@@ -102,12 +106,14 @@ export default function HeroSection() {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
+        aria-label="Previous slide"
         className="absolute left-6 top-3/5 md:top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
       >
         <FaChevronLeft size={24} />
       </button>
       <button
         onClick={nextSlide}
+        aria-label="Next slide"
         className="absolute right-6 top-3/5 md:top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 ease-out border border-white/20"
       >
         <FaChevronRight size={24} />
