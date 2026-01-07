@@ -24,7 +24,7 @@ export const orderSchema = z.object({
     district: z.string().min(1, "District is required"),
     postcode: z.string().optional(),
     phone: z.string().min(10, "Valid phone number required"),
-    email: z.string().email("Valid email required").optional(),
+    email: z.string().email("Valid email required").or(z.literal("")),
     notes: z.string().optional(),
   }),
   items: z.array(z.object({

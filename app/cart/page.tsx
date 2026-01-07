@@ -91,7 +91,7 @@ const CartPage = () => {
           >
             Clear Cart
           </button>
-           <Link href="/checkout">
+           <Link href="/account?from=checkout">
            
            
           <button className="px-6 py-2 bg-black text-white rounded">
