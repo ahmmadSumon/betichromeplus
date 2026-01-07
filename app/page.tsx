@@ -24,13 +24,13 @@ export default function Page() {
         <ThreeSection/>
       </div>
       <div className="relative z-10">
-        <Latest preloadedProducts={preloadedData?.products} />
+        <Latest />
       </div>
       <div className="relative z-10">
         <TwoSection />
       </div>
       <div className="relative z-10">
-        <JustIn preloadedProducts={preloadedData?.products} />
+        <JustIn />
       </div>
       <div className="relative z-10">
         <Showcase />
