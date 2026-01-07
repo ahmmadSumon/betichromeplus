@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import HeroSection from "@/components/HeroSection";
 import { ThreeDCardDemo } from "@/components/ThreeDCardDemo";
 import TwoSection from "@/components/TwoSection";
@@ -8,10 +10,13 @@ import { FeaturesSection } from "@/components/FeaturesSection";
 import Showcase from "@/components/Showcase";
 import ThreeSection from "@/components/ThreeSection";
 import BrandInfoScrollSection from "@/components/BrandInfoScrollSection";
+import { DataPreloader } from "@/components/DataPreloader";
 
 export default function Page() {
+  const [preloadedData, setPreloadedData] = useState<any>(null);
+
   return (
-    <>
+    <DataPreloader onDataReady={setPreloadedData}>
       <div className="relative z-0">
         <HeroSection />
       </div>
@@ -19,13 +24,13 @@ export default function Page() {
         <ThreeSection/>
       </div>
       <div className="relative z-10">
-        <Latest />
+        <Latest preloadedProducts={preloadedData?.products} />
       </div>
       <div className="relative z-10">
         <TwoSection />
       </div>
       <div className="relative z-10">
-        <JustIn />
+        <JustIn preloadedProducts={preloadedData?.products} />
       </div>
       <div className="relative z-10">
         <Showcase />
@@ -36,6 +41,6 @@ export default function Page() {
       <div className="relative z-10">
         <BrandInfoScrollSection/>
       </div>
-    </>
+    </DataPreloader>
   );
 }
