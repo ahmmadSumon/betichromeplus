@@ -79,7 +79,7 @@ export default function CheckoutPage() {
 
   if (orderConfirmed) {
     return (
-      <div className="bg-gray-50 min-h-screen py-12 flex items-center justify-center">
+      <div className="bg-gray-50 min-h-screen mt-20 py-12 flex items-center justify-center">
         <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 text-center">
           <div className="text-6xl mb-4">✅</div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -111,7 +111,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
+    <div className="bg-gray-50 min-h-screen mt-20 py-12">
       <div className="max-w-7xl mx-auto px-4">
         {/* HEADER */}
         <div className="mb-10">
