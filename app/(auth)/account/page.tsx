@@ -9,7 +9,11 @@ import { LoginFormDemo } from '@/components/LoginFormDemo'
 function AccountContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const fromCheckout = searchParams.get('from') === 'checkout'
+  const [showGuestOption, setShowGuestOption] = React.useState(false)
+
+  React.useEffect(() => {
+    setShowGuestOption(searchParams.get('from') === 'checkout')
+  }, [searchParams])
 
   useEffect(() => {
     const container = document.querySelector('.auth-container')
@@ -41,14 +45,20 @@ function AccountContent() {
 
   return (
     <div className="yy min-h-screen pt-28 w-full flex items-center justify-center mt-28 md:mt-10">
-      {fromCheckout && (
-        <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-md w-full mx-4">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold mb-2">Quick Checkout Option</h3>
-            <p className="text-gray-600 text-sm mb-4">Don't want to create an account? No problem!</p>
+      {showGuestOption && (
+        <div className="fixed top-20 md:top-24 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-3 md:p-4 w-[90%] max-w-xs md:max-w-md mx-4 md:mx-4">
+          <button
+            onClick={() => setShowGuestOption(false)}
+            className="absolute top-1 md:top-2 right-2 text-gray-400 hover:text-gray-600 text-lg md:text-xl font-bold w-6 h-6 flex items-center justify-center"
+          >
+            ×
+          </button>
+          <div className="text-center pt-2">
+            <h3 className="text-base md:text-lg font-semibold mb-2">Quick Checkout Option</h3>
+            <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">Don't want to create an account? No problem!</p>
             <button
               onClick={handleGuestCheckout}
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition"
+              className="w-full bg-green-600 text-white py-2 px-3 md:px-4 rounded-lg text-sm md:text-base font-medium hover:bg-green-700 transition"
             >
               Continue as Guest
             </button>
