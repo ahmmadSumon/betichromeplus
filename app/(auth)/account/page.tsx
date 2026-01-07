@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import './style.css'
 import { SignupFormDemo } from '@/components/SignupFormDemo'
 import { LoginFormDemo } from '@/components/LoginFormDemo'
 
-const Page = () => {
+function AccountContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const fromCheckout = searchParams.get('from') === 'checkout'
@@ -16,7 +16,6 @@ const Page = () => {
     const registerBtn = document.querySelector('.register-btn')
     const loginBtn = document.querySelector('.login-btn')
 
-    // safety check
     if (!container) return
 
     const handleRegister = () => {
@@ -86,6 +85,14 @@ const Page = () => {
         </div>
       </div>
     </div>
+  )
+}
+
+const Page = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <AccountContent />
+    </Suspense>
   )
 }
 
