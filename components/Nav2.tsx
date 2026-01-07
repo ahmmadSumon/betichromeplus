@@ -393,17 +393,17 @@ const Nav: React.FC = () => {
               </SheetHeader>
 
               <div className="mt-4 space-y-4 flex flex-col">
-                <Link href="/">HOME</Link>  
-                <Link href="/winter">WINTER 24/25</Link>
+                <Link href="/" onClick={() => setOpen(false)}>HOME</Link>  
+                <Link href="/winter" onClick={() => setOpen(false)}>WINTER 24/25</Link>
 
                 <div>
                   <Button variant="ghost" className="w-full text-left">
                     Shop
                   </Button>
                   <div className=" space-y-2 mt-2 flex flex-col">
-                    <Link href="/mens">Men&apos;s Fashion</Link>
-                    <Link href="/womens">Women&apos; Fashion</Link>
-                    <Link href="/kids">Kids&apos; Fashion</Link>
+                    <Link href="/mens" onClick={() => setOpen(false)}>Men&apos;s Fashion</Link>
+                    <Link href="/womens" onClick={() => setOpen(false)}>Women&apos; Fashion</Link>
+                    <Link href="/kids" onClick={() => setOpen(false)}>Kids&apos; Fashion</Link>
                   </div>
                 </div>
 
@@ -412,9 +412,9 @@ const Nav: React.FC = () => {
                     HOW TO ORDER
                   </Button>
                   <div className="space-y-2 mt-2 flex flex-col">
-                    <Link href="/order">Ordering Process</Link>
-                    <Link href="/order">Shipping Info</Link>
-                    <Link href="/order">Returns & Refunds</Link>
+                    <Link href="/order" onClick={() => setOpen(false)}>Ordering Process</Link>
+                    <Link href="/order" onClick={() => setOpen(false)}>Shipping Info</Link>
+                    <Link href="/order" onClick={() => setOpen(false)}>Returns & Refunds</Link>
                   </div>
                 </div>
               </div>
